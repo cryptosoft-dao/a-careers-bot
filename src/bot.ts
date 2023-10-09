@@ -18,7 +18,7 @@ const dataTg = {
 function getKeyb (username: string) {
     return {
         inline_keyboard: [
-            [ {text: 'Оплатить 10 TON', url: 'ton://transfer/EQDODXVefX9GVgOpgUmudgL_xBdAeowT4C-RqN0TAn9LMJ6U?amount=10000000000&msg='+username} ]
+            [ {text: 'Оплатить 10 TON', url: 'ton://transfer/EQDODXVefX9GVgOpgUmudgL_xBdAeowT4C-RqN0TAn9LMJ6U?amount=10000000000&message='+username} ]
         ] 
     }
 }
@@ -39,6 +39,18 @@ app.use(express.urlencoded()) // to support URL-encoded bodies
 app.use(cors())
 
 app.get('/', (req: Request, res: Response) => {
+    res.send('ok')
+})
+
+app.post('/send', (req: Request, res: Response) => {
+    const name = req.body.name
+    const username = req.body.username
+
+    const token = '5898239617:AAHJAYyRptVSVNQqX9rlX49ZCxu1iBa3H-E'
+    const bot = new TelegramBot(token, { polling: false })
+
+    bot.sendMessage(232885094, `Новая заявка\n\nИмя: ${name}\n\nНик:@${username}` )
+    bot.sendMessage(238211251, `Новая заявка\n\nИмя: ${name}\n\nНик:@${username}` )
     res.send('ok')
 })
 
