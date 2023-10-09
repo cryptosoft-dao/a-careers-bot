@@ -55,7 +55,7 @@ app.post('/send', async (req: Request, res: Response) => {
 
     await db.addUser2({
         id: 0,
-        username,
+        username: username.replace('@', ''),
         id_telegram: 0,
         pay: 0,
     } as User2)
