@@ -15,11 +15,15 @@ const dataTg = {
     ] 
 }
 
-const dataTg2 = {
-    inline_keyboard: [
-        [ {text: 'Оплатить 10 TON', url: 'https://t.me/CryptoBot?start=IVzE0Sy5BFIg'} ]
-    ] 
+function getKeyb (username: string) {
+    return {
+        inline_keyboard: [
+            [ {text: 'Оплатить 10 TON', url: 'ton://transfer/EQDODXVefX9GVgOpgUmudgL_xBdAeowT4C-RqN0TAn9LMJ6U?amount=10000000000&comment='+username} ]
+        ] 
+    }
 }
+
+
 
 const keyboardAddAddress = {inline_keyboard: [
     [ {text: 'Back', callback_data: 'main'} ]
@@ -263,7 +267,7 @@ async function startBotTest () {
     
             bot.sendMessage(chatId, 'Привет это бот для оплаты', { 
                 parse_mode: 'HTML',
-                reply_markup: dataTg2
+                reply_markup: getKeyb(username ?? chatId + '')
             })
         }
         
