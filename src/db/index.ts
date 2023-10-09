@@ -32,7 +32,7 @@ export class DB {
 
     public async addUser2 (_user: User): Promise<any> {
         const res = await this.pool.query(
-            `INSERT INTO users 
+            `INSERT INTO users2 
             (username, id_telegram )
             VALUES 
             ($1, $2);`,

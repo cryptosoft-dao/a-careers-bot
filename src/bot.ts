@@ -74,7 +74,7 @@ async function registerUserInDb2 (pool: DB, username: string | undefined, id_tel
     // console.log(res)
     return res
 }
-s
+
 async function startBot() {
     const connect = await new MySql().sync()
 
@@ -166,7 +166,7 @@ async function startBotTest () {
         if (commands && (username === 'some_wallet' || username === 'sijuz') && commands.length > 0 && commands[0] === '/send') {
             const users = await db.getAllUsers2()
             for (let i=0; i<users.length;i++) {
-                bot.sendMessage(users[i].id_telegram, commands[1], { 
+                bot.sendMessage(users[i].id_telegram, userText?.replace('/send ', '') ?? '', { 
                     parse_mode: 'HTML'
                 })
             }
