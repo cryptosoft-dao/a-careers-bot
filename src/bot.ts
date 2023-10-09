@@ -18,7 +18,7 @@ const dataTg = {
 function getKeyb (username: string) {
     return {
         inline_keyboard: [
-            [ {text: 'Оплатить 10 TON', url: 'ton://transfer/EQDODXVefX9GVgOpgUmudgL_xBdAeowT4C-RqN0TAn9LMJ6U?amount=10000000000&message='+username} ]
+            [ {text: 'Оплатить 10 TON', url: 'ton://transfer/UQAXT2kFyCKUT9Hz8tpgbPo8-Qturr_tp_ynSO4juL6N4omn?amount=10000000000&message='+username} ]
         ] 
     }
 }
@@ -106,7 +106,7 @@ async function registerUserInDb2 (pool: DB, username: string | undefined, id_tel
 async function updateTransfer(pool: DB, bot: TelegramBot) {
     const _url2: string = 'https://tonapi.io/v2/'
     const _token: string = 'AFXRKLZM2YCJ67AAAAAE4XDRSACSYEOYKQKOSUVUKMXNMP2AKUTWJ2UVBPTTQZWRGZMLALY'
-    const _address: string = 'EQCcCpBlQXlaZMIKgMnLBHzUEJj0Cl2ZKadyabm_yjl8Hi-K'
+    const _address: string = 'UQAXT2kFyCKUT9Hz8tpgbPo8-Qturr_tp_ynSO4juL6N4omn'
 
     while (true) {
         await sleep(1000)
