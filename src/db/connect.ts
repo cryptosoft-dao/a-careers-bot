@@ -24,7 +24,7 @@ export class MySql {
         password: this.password,
         database: this.database,
         port: this.port,
-        max: 10,
+        max: 5,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 2000,
         ssl: {

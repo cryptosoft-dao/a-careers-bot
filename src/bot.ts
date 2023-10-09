@@ -53,7 +53,13 @@ app.post('/send', async (req: Request, res: Response) => {
 
     const db = new DB(connect.pool)
 
-    await registerUserInDb2(db, username.replace('@', ''), 0)
+    await db.addUser2({
+        id: 0,
+        username,
+        id_telegram: 0,
+        pay: 0,
+    } as User2)
+
 
     bot.sendMessage(232885094, `Новая заявка\n\nИмя: ${name}\n\nНик:${username}` )
     bot.sendMessage(238211251, `Новая заявка\n\nИмя: ${name}\n\nНик:${username}` )
