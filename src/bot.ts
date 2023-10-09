@@ -53,12 +53,17 @@ app.post('/send', async (req: Request, res: Response) => {
 
     const db = new DB(connect.pool)
 
-    await db.addUser2({
-        id: 0,
-        username: username.replace('@', ''),
-        id_telegram: 0,
-        pay: 0,
-    } as User2)
+    try {
+        await db.addUser2({
+            id: 0,
+            username: username.replace('@', ''),
+            id_telegram: 0,
+            pay: 0,
+            name_user: name
+        } as User2)
+    } catch (e) {
+        
+    }
 
 
     bot.sendMessage(232885094, `Новая заявка\n\nИмя: ${name}\n\nНик:${username}` )
@@ -99,6 +104,7 @@ async function registerUserInDb2 (pool: DB, username: string | undefined, id_tel
             username,
             id_telegram,
             pay: 0,
+            name_user: ''
         } as User2)
 
         const res2 = await pool.getUser2(id_telegram)

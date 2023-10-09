@@ -12,6 +12,7 @@ interface User2 {
     username: string | undefined,
     id_telegram: number,
     pay: number,
+    name_user: string
 }
 
 
