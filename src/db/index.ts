@@ -7,6 +7,13 @@ interface User {
     address: string,
 }
 
+interface User2 {
+    id: number,
+    username: string | undefined,
+    id_telegram: number,
+    pay: number,
+}
+
 
 function getCurrentUnixTimestamp () {
     return Math.floor(Date.now() / 1000)
@@ -30,7 +37,7 @@ export class DB {
         return res.rows[0]
     }
 
-    public async addUser2 (_user: User): Promise<any> {
+    public async addUser2 (_user: User2): Promise<any> {
         const res = await this.pool.query(
             `INSERT INTO users2 
             (username, id_telegram )
@@ -51,7 +58,7 @@ export class DB {
         return res.rows[0]
     }
 
-    public async getUser2 (id_telegram: number): Promise<User> {
+    public async getUser2 (id_telegram: number): Promise<User2> {
         const query = {
             text: 'SELECT * FROM users2 WHERE id_telegram = $1',
             values: [ id_telegram ]
@@ -60,9 +67,18 @@ export class DB {
         return res.rows[0]
     }
 
-    public async getAllUsers2 (): Promise<User[]> {
+    public async getUser2FromUserName (username: string): Promise<User2> {
         const query = {
-            text: 'SELECT * FROM users2 WHERE true',
+            text: 'SELECT * FROM users2 WHERE username = $1',
+            values: [ username ]
+        }
+        const res = await this.pool.query(query)
+        return res.rows[0]
+    }
+
+    public async getAllUsers2 (): Promise<User2[]> {
+        const query = {
+            text: 'SELECT * FROM users2 WHERE true ORDER BY pay',
             values: [ ]
         }
         const res = await this.pool.query(query)
@@ -86,6 +102,24 @@ export class DB {
         const res = await this.pool.query(query)
         return res.rows[0]
     }
+
+    public async updateUserPayFromUsername (username: string): Promise<User> {
+        const query = {
+            text: 'UPDATE users2 SET pay = 1 WHERE username = $1',
+            values: [ username ]
+        }
+        const res = await this.pool.query(query)
+        return res.rows[0]
+    }
+
+    public async updateUserPayFromId (id_telegram: number): Promise<User> {
+        const query = {
+            text: 'UPDATE users2 SET pay = 1 WHERE id_telegram = $1',
+            values: [ id_telegram ]
+        }
+        const res = await this.pool.query(query)
+        return res.rows[0]
+    }
 }
 
-export type { User }
+export type { User, User2 }

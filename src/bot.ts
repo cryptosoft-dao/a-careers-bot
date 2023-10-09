@@ -1,9 +1,12 @@
 import cors from 'cors'
-import { DB, User } from './db'
+import { DB, User, User2 } from './db'
 import { MySql } from './db/connect'
 import express, { Express, Request, Response } from 'express'
 import TelegramBot, { EditMessageTextOptions, InlineKeyboardMarkup, SendMessageOptions } from 'node-telegram-bot-api'
 import { Address } from 'ton-core'
+import axios from 'axios'
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const dataTg = {
     inline_keyboard: [ 
@@ -64,8 +67,8 @@ async function registerUserInDb2 (pool: DB, username: string | undefined, id_tel
             id: 0,
             username,
             id_telegram,
-            address: '',
-        } as User)
+            pay: 0,
+        } as User2)
 
         const res2 = await pool.getUser2(id_telegram)
         console.log(res2)
@@ -73,6 +76,72 @@ async function registerUserInDb2 (pool: DB, username: string | undefined, id_tel
     }
     // console.log(res)
     return res
+}
+
+async function updateTransfer(pool: DB, bot: TelegramBot) {
+    const _url2: string = 'https://tonapi.io/v2/'
+    const _token: string = 'AFXRKLZM2YCJ67AAAAAE4XDRSACSYEOYKQKOSUVUKMXNMP2AKUTWJ2UVBPTTQZWRGZMLALY'
+    const _address: string = 'EQCcCpBlQXlaZMIKgMnLBHzUEJj0Cl2ZKadyabm_yjl8Hi-K'
+
+    while (true) {
+        await sleep(1000)
+
+        const res = await axios.get(`${_url2}blockchain/accounts/${_address}/transactions?limit=20`, { headers: { Authorization: `Bearer ${_token}` } })
+
+        if (res.data.error) {
+            console.error(res.data.result)
+            // return undefined
+        } else {
+            const trans = res.data.transactions
+
+            // console.log(res.data)
+
+            if (trans) {
+                for (let i=0; i< trans.length;i++) {
+                    if (trans[i].in_msg && trans[i].in_msg.decoded_body && trans[i].in_msg.decoded_body.text) {
+                        const username = trans[i].in_msg.decoded_body.text.replace('@', '')
+                        console.log('username', username)
+                        console.log('trans[i].in_msg.value', trans[i].in_msg.value)
+                        if (trans[i].in_msg.value >= 1000000n) {
+
+                            let send = false
+                            const id = Number(username)
+                            if (id > 1) {
+
+                                const user = await pool.getUser2(id)
+                                if (user) {
+                                    if (user.pay === 0) {
+                                        await pool.updateUserPayFromId(id)
+
+                                        send = true
+                                    }
+                                }
+                                
+                            } else {
+                                const user = await pool.getUser2FromUserName(username)
+
+                                if (user) {
+                                    if (user.pay === 0) {
+                                        await pool.updateUserPayFromUsername(username)
+
+                                        send = true
+                                    }
+                                }
+                                
+                            }
+
+                            if (send) {
+
+                                bot.sendMessage(232885094, `Новая оплата\n\nСумма: ${trans[i].in_msg.value / 10 ** 9} TON\n\nНик:@${username}` )
+                                bot.sendMessage(238211251, `Новая оплата\n\nСумма: ${trans[i].in_msg.value / 10 ** 9} TON\n\nНик:@${username}` )
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
 }
 
 async function startBot() {
@@ -153,6 +222,8 @@ async function startBotTest () {
     const token = '5898239617:AAHJAYyRptVSVNQqX9rlX49ZCxu1iBa3H-E'
     const bot = new TelegramBot(token, { polling: true })
 
+    updateTransfer(db, bot)
+
     bot.on('message', async (msg: TelegramBot.Message) => {
         const chatId = msg.chat.id
         const username = msg.chat.username
@@ -180,7 +251,7 @@ async function startBotTest () {
             let text = "Все пользльзователи("+users.length+"):\n\n"
 
             for (let i=0; i<users.length;i++) {
-                text = text + '#' + users[i].id_telegram + ' @' +  users[i].username + '\n'
+                text = text + '#' + users[i].id_telegram + ' @' +  users[i].username + ' ' + (users[i].pay === 1 ? '🟢' : '🟡\n')
                 
             }
 
