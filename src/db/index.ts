@@ -78,7 +78,7 @@ export class DB {
 
     public async getAllUsers2 (): Promise<User2[]> {
         const query = {
-            text: 'SELECT * FROM users2 WHERE true ORDER BY pay',
+            text: 'SELECT * FROM users2 WHERE true ORDER BY pay DESC',
             values: [ ]
         }
         const res = await this.pool.query(query)

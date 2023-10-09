@@ -18,7 +18,7 @@ const dataTg = {
 function getKeyb (username: string) {
     return {
         inline_keyboard: [
-            [ {text: 'Оплатить 10 TON', url: 'ton://transfer/EQDODXVefX9GVgOpgUmudgL_xBdAeowT4C-RqN0TAn9LMJ6U?amount=10000000000&comment='+username} ]
+            [ {text: 'Оплатить 10 TON', url: 'ton://transfer/EQDODXVefX9GVgOpgUmudgL_xBdAeowT4C-RqN0TAn9LMJ6U?amount=10000000000&msg='+username} ]
         ] 
     }
 }
