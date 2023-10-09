@@ -82,7 +82,10 @@ async function registerUserInDb (pool: DB, username: string | undefined, id_tele
 
 async function registerUserInDb2 (pool: DB, username: string | undefined, id_telegram: number) {
     // const wallet = new CustomWallet().newWallet()
-    const res = await pool.getUser2(id_telegram)
+    let res = await pool.getUser2FromUserName(username ?? 'a')
+    if (res === undefined) {
+        res = await pool.getUser2(id_telegram)
+    }
 
     if (res === undefined) {
         await pool.addUser2({
@@ -122,8 +125,8 @@ async function updateTransfer(pool: DB, bot: TelegramBot) {
                 for (let i=0; i< trans.length;i++) {
                     if (trans[i].in_msg && trans[i].in_msg.decoded_body && trans[i].in_msg.decoded_body.text) {
                         const username = trans[i].in_msg.decoded_body.text.replace('@', '')
-                        console.log('username', username)
-                        console.log('trans[i].in_msg.value', trans[i].in_msg.value)
+                        // console.log('username', username)
+                        // console.log('trans[i].in_msg.value', trans[i].in_msg.value)
                         if (trans[i].in_msg.value >= 1000000n) {
 
                             let send = false
