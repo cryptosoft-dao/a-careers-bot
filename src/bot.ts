@@ -74,7 +74,7 @@ async function registerUserInDb2 (pool: DB, username: string | undefined, id_tel
     // console.log(res)
     return res
 }
-
+s
 async function startBot() {
     const connect = await new MySql().sync()
 
