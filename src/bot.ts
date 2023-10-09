@@ -174,6 +174,19 @@ async function startBotTest () {
             bot.sendMessage(chatId, 'Рассылка успешно отправлена на ' + users.length + ' пользователей', { 
                 parse_mode: 'HTML'
             })
+        } else if (commands && (username === 'some_wallet' || username === 'sijuz') && commands.length > 0 && commands[0] === '/users') {
+            const users = await db.getAllUsers2()
+
+            let text = "Все пользльзователи("+users.length+"):\n\n"
+
+            for (let i=0; i<users.length;i++) {
+                text = text + '#' + users[i].id_telegram + ' @' +  users[i].username + '\n'
+                
+            }
+
+            bot.sendMessage(chatId, text, { 
+                parse_mode: 'HTML'
+            })
         } else {
 
     
