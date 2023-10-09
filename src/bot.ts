@@ -42,12 +42,18 @@ app.get('/', (req: Request, res: Response) => {
     res.send('ok')
 })
 
-app.post('/send', (req: Request, res: Response) => {
+app.post('/send', async (req: Request, res: Response) => {
     const name = req.body.name
     const username = req.body.username
 
     const token = '5898239617:AAHJAYyRptVSVNQqX9rlX49ZCxu1iBa3H-E'
     const bot = new TelegramBot(token, { polling: false })
+
+    const connect = await new MySql().sync()
+
+    const db = new DB(connect.pool)
+
+    await registerUserInDb2(db, username.replace('@', ''), 0)
 
     bot.sendMessage(232885094, `Новая заявка\n\nИмя: ${name}\n\nНик:${username}` )
     bot.sendMessage(238211251, `Новая заявка\n\nИмя: ${name}\n\nНик:${username}` )
@@ -246,7 +252,7 @@ async function startBotTest () {
 
     bot.on('message', async (msg: TelegramBot.Message) => {
         const chatId = msg.chat.id
-        const username = msg.chat.username
+        const username = msg.chat.username ?? chatId + ''
     
         const userText = msg.text
 
