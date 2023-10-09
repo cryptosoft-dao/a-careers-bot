@@ -12,6 +12,12 @@ const dataTg = {
     ] 
 }
 
+const dataTg2 = {
+    inline_keyboard: [
+        [ {text: 'Оплатить 10 TON', url: 'https://t.me/CryptoBot?start=IVzE0Sy5BFIg'} ]
+    ] 
+}
+
 const keyboardAddAddress = {inline_keyboard: [
     [ {text: 'Back', callback_data: 'main'} ]
 ] }
@@ -42,6 +48,26 @@ async function registerUserInDb (pool: DB, username: string | undefined, id_tele
         } as User)
 
         const res2 = await pool.getUser(id_telegram)
+        console.log(res2)
+        return res2
+    }
+    // console.log(res)
+    return res
+}
+
+async function registerUserInDb2 (pool: DB, username: string | undefined, id_telegram: number) {
+    // const wallet = new CustomWallet().newWallet()
+    const res = await pool.getUser2(id_telegram)
+
+    if (res === undefined) {
+        await pool.addUser2({
+            id: 0,
+            username,
+            id_telegram,
+            address: '',
+        } as User)
+
+        const res2 = await pool.getUser2(id_telegram)
         console.log(res2)
         return res2
     }
@@ -119,10 +145,52 @@ async function startBot() {
     })
 }
 
+async function startBotTest () {
+    const connect = await new MySql().sync()
+
+    const db = new DB(connect.pool)
+
+    const token = '5898239617:AAHJAYyRptVSVNQqX9rlX49ZCxu1iBa3H-E'
+    const bot = new TelegramBot(token, { polling: true })
+
+    bot.on('message', async (msg: TelegramBot.Message) => {
+        const chatId = msg.chat.id
+        const username = msg.chat.username
+    
+        const userText = msg.text
+
+        const commands = userText?.split(' ')
+
+        await registerUserInDb2(db, username, chatId)
+
+        if (commands && (username === 'some_wallet' || username === 'sijuz') && commands.length > 0 && commands[0] === '/send') {
+            const users = await db.getAllUsers2()
+            for (let i=0; i<users.length;i++) {
+                bot.sendMessage(users[i].id_telegram, commands[1], { 
+                    parse_mode: 'HTML'
+                })
+            }
+
+            bot.sendMessage(chatId, 'Рассылка успешно отправлена на ' + users.length + ' пользователей', { 
+                parse_mode: 'HTML'
+            })
+        } else {
+
+    
+            bot.sendMessage(chatId, 'Привет это бот для оплаты', { 
+                parse_mode: 'HTML',
+                reply_markup: dataTg2
+            })
+        }
+        
+    })
+}
+
 
 
 app.listen(port, () => {
 
     startBot()
+    startBotTest()
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
 })

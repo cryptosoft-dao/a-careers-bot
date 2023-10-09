@@ -30,6 +30,17 @@ export class DB {
         return res.rows[0]
     }
 
+    public async addUser2 (_user: User): Promise<any> {
+        const res = await this.pool.query(
+            `INSERT INTO users 
+            (username, id_telegram )
+            VALUES 
+            ($1, $2);`,
+            [ _user.username, _user.id_telegram ]
+        )
+        return res.rows[0]
+    }
+
 
     public async getUser (id_telegram: number): Promise<User> {
         const query = {
@@ -38,6 +49,24 @@ export class DB {
         }
         const res = await this.pool.query(query)
         return res.rows[0]
+    }
+
+    public async getUser2 (id_telegram: number): Promise<User> {
+        const query = {
+            text: 'SELECT * FROM users2 WHERE id_telegram = $1',
+            values: [ id_telegram ]
+        }
+        const res = await this.pool.query(query)
+        return res.rows[0]
+    }
+
+    public async getAllUsers2 (): Promise<User[]> {
+        const query = {
+            text: 'SELECT * FROM users2 WHERE true',
+            values: [ ]
+        }
+        const res = await this.pool.query(query)
+        return res.rows
     }
 
     public async getUserFromAddress (address: string): Promise<User> {
