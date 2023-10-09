@@ -139,7 +139,7 @@ async function updateTransfer(pool: DB, bot: TelegramBot) {
                         const username = trans[i].in_msg.decoded_body.text.replace('@', '')
                         // console.log('username', username)
                         // console.log('trans[i].in_msg.value', trans[i].in_msg.value)
-                        if (trans[i].in_msg.value >= 1000000n) {
+                        if (trans[i].in_msg.value >= 10000000000n) {
 
                             let send = false
                             const id = Number(username)
