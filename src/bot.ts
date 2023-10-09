@@ -66,8 +66,8 @@ app.post('/send', async (req: Request, res: Response) => {
     }
 
 
-    bot.sendMessage(232885094, `Новая заявка\n\nИмя: ${name}\n\nНик:${username}` )
-    bot.sendMessage(238211251, `Новая заявка\n\nИмя: ${name}\n\nНик:${username}` )
+    bot.sendMessage(232885094, `Новая заявка\n\nИмя: ${name}\n\nНик: ${username}` )
+    bot.sendMessage(238211251, `Новая заявка\n\nИмя: ${name}\n\nНик: ${username}` )
     res.send('ok')
 })
 
@@ -173,8 +173,8 @@ async function updateTransfer(pool: DB, bot: TelegramBot) {
 
                             if (send) {
 
-                                bot.sendMessage(232885094, `Новая оплата\n\nСумма: ${trans[i].in_msg.value / 10 ** 9} TON\n\nНик:@${username}` )
-                                bot.sendMessage(238211251, `Новая оплата\n\nСумма: ${trans[i].in_msg.value / 10 ** 9} TON\n\nНик:@${username}` )
+                                bot.sendMessage(232885094, `Новая оплата\n\nСумма: ${trans[i].in_msg.value / 10 ** 9} TON\n\nНик: @${username}` )
+                                bot.sendMessage(238211251, `Новая оплата\n\nСумма: ${trans[i].in_msg.value / 10 ** 9} TON\n\nНик: @${username}` )
                             }
                         }
 
