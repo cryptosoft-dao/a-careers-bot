@@ -255,7 +255,7 @@ async function startBotTest () {
             let text = "Все пользльзователи("+users.length+"):\n\n"
 
             for (let i=0; i<users.length;i++) {
-                text = text + '#' + users[i].id_telegram + ' @' +  users[i].username + ' ' + (users[i].pay === 1 ? '🟢' : '🟡\n')
+                text = text + '#' + users[i].id_telegram + ' @' +  users[i].username + ' ' + (users[i].pay === 1 ? '🟢\n' : '🟡\n')
                 
             }
 
