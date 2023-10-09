@@ -117,6 +117,8 @@ async function updateTransfer(pool: DB, bot: TelegramBot) {
                                     if (user.pay === 0) {
                                         await pool.updateUserPayFromId(id)
 
+                                        bot.sendMessage(user.id_telegram, 'Успешная оплата' )
+
                                         send = true
                                     }
                                 }
@@ -127,6 +129,8 @@ async function updateTransfer(pool: DB, bot: TelegramBot) {
                                 if (user) {
                                     if (user.pay === 0) {
                                         await pool.updateUserPayFromUsername(username)
+
+                                        bot.sendMessage(user.id_telegram, 'Успешная оплата' )
 
                                         send = true
                                     }
