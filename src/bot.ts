@@ -316,6 +316,6 @@ async function startBotTest () {
 app.listen(port, () => {
 
     startBot()
-    startBotTest()
+    // startBotTest()
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
 })
